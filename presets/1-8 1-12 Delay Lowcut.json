@@ -1,0 +1,20 @@
+{
+  "plugin": "Cute Delay",
+  "version": "1.0.0",
+  "name": "1-8 1-12 Delay Lowcut",
+  "author": "Moebytes",
+  "modified": "2026-07-01T20:25:58.557-04:00",
+  "presetFormat": 1,
+  "parameters": {
+    "dry": "76%",
+    "wet": "89%",
+    "delayL": "1/8",
+    "delayR": "1/12",
+    "shift": "0",
+    "feedback": "63%",
+    "width": "124%",
+    "pingPong": "Off",
+    "lowcut": "1246Hz",
+    "highcut": "20000Hz"
+  }
+}

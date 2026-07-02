@@ -1,0 +1,119 @@
+import React, {useState, useEffect} from "react"
+import {createRoot} from "react-dom/client"
+import Knob from "./components/Knob"
+import SkewKnob from "./components/SkewKnob"
+import ComboKnob from "./components/ComboKnob"
+import MiniComboKnob from "./components/MiniComboKnob"
+import Checkbox from "./components/Checkbox"
+import PresetBar from "./components/PresetBar"
+import DarkIcon from "./assets/dark.svg"
+import LightIcon from "./assets/light.svg"
+import parameters from "./processor/parameters.json"
+import "./index.scss"
+
+const darkColorList = {
+    "--background": "#220E1A",
+    "--textColor": "#FFFFFF"
+}
+
+const lightColorList = {
+    "--background": "#FFBEE6",
+    "--textColor": "#000000",
+}
+
+type ThemeContextType = {theme: string; setTheme: React.Dispatch<React.SetStateAction<string>>}
+export const ThemeContext = React.createContext<ThemeContextType>({theme: "", setTheme: () => null})
+
+const App: React.FunctionComponent = () => {
+    const [theme, setTheme] = useState(localStorage.getItem("theme") || "light")
+    
+    useEffect(() => {
+        window.__JUCE__.backend.emitEvent("themeChange", {theme})
+    }, [])
+
+    useEffect(() => {
+        const colorList = theme === "light" ? lightColorList : darkColorList
+        for (const [key, color] of Object.entries(colorList)) {
+            document.documentElement.style.setProperty(key, color)
+        }
+        localStorage.setItem("theme", theme)
+        window.__JUCE__.backend.emitEvent("themeChange", {theme})
+    }, [theme])
+
+    const toggleTheme = () => {
+        setTheme((prev) => prev === "light" ? "dark" : "light")
+    }
+
+    return (
+        <div className="app">
+            <ThemeContext.Provider value={{theme, setTheme}}>
+            <div className="title-container">
+                <span className="title-text">Cute Delay</span>
+                {theme === "light" ? 
+                <DarkIcon className="theme-icon" onClick={toggleTheme}/> :
+                <LightIcon className="theme-icon" onClick={toggleTheme}/>}
+            </div>
+            <div className="knobs-container">
+                <div className="column-container">
+                    <SkewKnob
+                        label={parameters.lowcut.id.toUpperCase()}
+                        parameterID={parameters.lowcut.id}
+                        color="#FF4EA7"/>
+                    <SkewKnob
+                        label={parameters.highcut.id.toUpperCase()}
+                        parameterID={parameters.highcut.id}
+                        color="#FF4EA7"/>
+                </div>
+                <div className="big-column-container">
+                    <div className="row-container">
+                        <ComboKnob
+                            label={"DELAY L"}
+                            parameterID={parameters.delayL.id}
+                            color="#FF4EA7"/>
+                        <ComboKnob
+                            label={"DELAY R"}
+                            parameterID={parameters.delayR.id}
+                            color="#FF4EA7"/>
+                    </div>
+                    <div className="row-container">
+                        <MiniComboKnob
+                            label={parameters.shift.id.toUpperCase()}
+                            parameterID={parameters.shift.id}
+                            color="#FF4EA7"/>
+                        <Checkbox
+                            label={"PING PONG?"}
+                            parameterID={parameters.pingPong.id}/>
+                    </div>
+                </div>
+                <div className="column-container">
+                    <Knob
+                        label={parameters.feedback.id.toUpperCase()}
+                        parameterID={parameters.feedback.id}
+                        color="#FF4EA7"/>
+                    <Knob
+                        label={parameters.width.id.toUpperCase()}
+                        parameterID={parameters.width.id}
+                        color="#FF4EA7"/>
+                </div>
+                <div className="column-container">
+                    <Knob
+                        label={parameters.dry.id.toUpperCase()}
+                        parameterID={parameters.dry.id}
+                        color="#FF4EA7"/>
+                    <Knob
+                        label={parameters.wet.id.toUpperCase()}
+                        parameterID={parameters.wet.id}
+                        color="#FF4EA7"/>
+                </div>
+            </div>
+            <div className="preset-container">
+                <PresetBar/>
+            </div>
+            </ThemeContext.Provider>
+        </div>
+    )
+
+}
+
+const root = createRoot(document.getElementById("root")!)
+root.render(<App/>)

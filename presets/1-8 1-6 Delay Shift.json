@@ -1,0 +1,20 @@
+{
+  "plugin": "Cute Delay",
+  "version": "1.0.0",
+  "name": "1-8 1-6 Delay Shift",
+  "author": "Moebytes",
+  "modified": "2026-07-01T20:23:18.096-04:00",
+  "presetFormat": 1,
+  "parameters": {
+    "dry": "76%",
+    "wet": "80%",
+    "delayL": "1/8",
+    "delayR": "1/6",
+    "shift": "1/8",
+    "feedback": "61%",
+    "width": "116%",
+    "pingPong": "Off",
+    "lowcut": "200Hz",
+    "highcut": "20000Hz"
+  }
+}

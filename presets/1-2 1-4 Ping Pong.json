@@ -1,0 +1,20 @@
+{
+  "plugin": "Cute Delay",
+  "version": "1.0.0",
+  "name": "1-2 1-4 Ping Pong",
+  "author": "Moebytes",
+  "modified": "2026-07-01T20:17:31.014-04:00",
+  "presetFormat": 1,
+  "parameters": {
+    "dry": "90%",
+    "wet": "70%",
+    "delayL": "1/2",
+    "delayR": "1/4",
+    "shift": "0",
+    "feedback": "60%",
+    "width": "100%",
+    "pingPong": "On",
+    "lowcut": "200Hz",
+    "highcut": "20000Hz"
+  }
+}

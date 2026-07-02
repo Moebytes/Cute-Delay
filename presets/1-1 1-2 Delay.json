@@ -1,0 +1,20 @@
+{
+  "plugin": "Cute Delay",
+  "version": "1.0.0",
+  "name": "1-1 1-2 Delay",
+  "author": "Moebytes",
+  "modified": "2026-07-01T20:21:27.022-04:00",
+  "presetFormat": 1,
+  "parameters": {
+    "dry": "80%",
+    "wet": "75%",
+    "delayL": "1/1",
+    "delayR": "1/2",
+    "shift": "0",
+    "feedback": "61%",
+    "width": "112%",
+    "pingPong": "Off",
+    "lowcut": "200Hz",
+    "highcut": "20000Hz"
+  }
+}

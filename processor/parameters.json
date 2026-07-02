@@ -1,0 +1,12 @@
+{
+    "dry": {"id": "dry", "version": 1},
+    "wet": {"id": "wet", "version": 1},
+    "delayL": {"id": "delayL", "version": 1},
+    "delayR": {"id": "delayR", "version": 1},
+    "shift": {"id": "shift", "version": 1},
+    "feedback": {"id": "feedback", "version": 1},
+    "width": {"id": "width", "version": 1},
+    "pingPong": {"id": "pingPong", "version": 1},
+    "lowcut": {"id": "lowcut", "version": 1},
+    "highcut": {"id": "highcut", "version": 1}
+}
