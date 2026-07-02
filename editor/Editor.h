@@ -22,11 +22,8 @@ private:
     Processor& processor;
     ComponentBoundsConstrainer constrainer;
 
-    WebSliderRelay dryRelay {Parameters::paramIDs.dry.getParamID()};
-    WebSliderParameterAttachment dryAttachment {*this->processor.parameters.dryParam, dryRelay, nullptr};
-
-    WebSliderRelay wetRelay {Parameters::paramIDs.wet.getParamID()};
-    WebSliderParameterAttachment wetAttachment {*this->processor.parameters.wetParam, wetRelay, nullptr};
+    WebSliderRelay mixRelay {Parameters::paramIDs.mix.getParamID()};
+    WebSliderParameterAttachment mixAttachment {*this->processor.parameters.mixParam, mixRelay, nullptr};
 
     WebComboBoxRelay delayLRelay {Parameters::paramIDs.delayL.getParamID()};
     WebComboBoxParameterAttachment delayLAttachment {*this->processor.parameters.delayLParam, delayLRelay, nullptr};

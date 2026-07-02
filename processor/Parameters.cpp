@@ -37,8 +37,7 @@ Parameters::Parameters(AudioProcessorValueTreeState& tree) : tree(tree) {
     using ChoicePair = std::pair<AudioParameterChoice*&, const ParameterID*>;
 
     auto floatParameters = std::vector<FloatPair>{
-        {dryParam, &paramIDs.dry},
-        {wetParam, &paramIDs.wet},
+        {mixParam, &paramIDs.mix},
         {feedbackParam, &paramIDs.feedback},
         {widthParam, &paramIDs.width},
         {lowcutParam, &paramIDs.lowcut},
@@ -72,13 +71,7 @@ auto Parameters::createParameterLayout() -> AudioProcessorValueTreeState::Parame
     AudioProcessorValueTreeState::ParameterLayout layout;
 
     layout.add(std::make_unique<AudioParameterFloat>(
-        paramIDs.dry, "Dry", NormalisableRange<float>{0.0f, 1.0f, 0.01f}, 1.0f,
-        AudioParameterFloatAttributes().withStringFromValueFunction(Functions::displayPercent)
-        .withValueFromStringFunction(Functions::parsePercent)
-    ));
-
-    layout.add(std::make_unique<AudioParameterFloat>(
-        paramIDs.wet, "Wet", NormalisableRange<float>{0.0f, 1.0f, 0.01f}, 0.5f,
+        paramIDs.mix, "Mix", NormalisableRange<float>{0.0f, 1.0f, 0.01f}, 0.5f,
         AudioParameterFloatAttributes().withStringFromValueFunction(Functions::displayPercent)
         .withValueFromStringFunction(Functions::parsePercent)
     ));
@@ -143,8 +136,7 @@ auto Parameters::prepareToPlay(double sampleRate, int blockSize) noexcept -> voi
     double duration = 0.001;
 
     auto smoothers = std::vector{
-        &drySmoother,
-        &wetSmoother,
+        &mixSmoother,
         &feedbackSmoother,
         &widthSmoother
     };
@@ -156,8 +148,7 @@ auto Parameters::prepareToPlay(double sampleRate, int blockSize) noexcept -> voi
 
 auto Parameters::reset() noexcept -> void {
     auto paramFloats = std::vector{
-        std::pair{dryParam, &dry},
-        std::pair{wetParam, &wet},
+        std::pair{mixParam, &mix},
         std::pair{feedbackParam, &feedback},
         std::pair{widthParam, &width},
         std::pair{lowcutParam, &lowcut},
@@ -187,8 +178,7 @@ auto Parameters::reset() noexcept -> void {
     }
     
     auto smoothers = std::vector{
-        std::pair{dryParam, &drySmoother},
-        std::pair{wetParam, &wetSmoother},
+        std::pair{mixParam, &mixSmoother},
         std::pair{feedbackParam, &feedbackSmoother},
         std::pair{widthParam, &widthSmoother},
         std::pair{lowcutParam, &lowcutSmoother},
@@ -217,8 +207,7 @@ auto Parameters::setHostInfo(double bpm, double ppq, const AudioPlayHead::TimeSi
 
 auto Parameters::blockUpdate() noexcept -> void {
     auto smoothers = std::vector{
-        std::pair{dryParam, &drySmoother},
-        std::pair{wetParam, &wetSmoother},
+        std::pair{mixParam, &mixSmoother},
         std::pair{feedbackParam, &feedbackSmoother},
         std::pair{widthParam, &widthSmoother},
         std::pair{lowcutParam, &lowcutSmoother},
@@ -236,8 +225,7 @@ auto Parameters::blockUpdate() noexcept -> void {
 }
 
 auto Parameters::update() noexcept -> void {
-    this->dry = this->drySmoother.getNextValue();
-    this->wet = this->wetSmoother.getNextValue();
+    this->mix = this->mixSmoother.getNextValue();
 
     this->feedback = this->feedbackSmoother.getNextValue();
     this->width = this->widthSmoother.getNextValue();

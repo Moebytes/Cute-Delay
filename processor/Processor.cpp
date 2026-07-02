@@ -118,8 +118,7 @@ auto Processor::processBlock(AudioBuffer<float>& buffer, [[maybe_unused]] MidiBu
         this->delay.setLowcutFreq(this->parameters.lowcut);
         this->delay.setHighcutFreq(this->parameters.highcut);
 
-        float dry = this->parameters.dry;
-        float wet = this->parameters.wet;
+        float mix = this->parameters.mix;
 
         const float dryL = inputL[sample];
         const float dryR = inputR[sample];
@@ -129,8 +128,8 @@ auto Processor::processBlock(AudioBuffer<float>& buffer, [[maybe_unused]] MidiBu
 
         this->delay.process(dryL, dryR, wetL, wetR);
 
-        outputL[sample] = dryL * dry + wetL * wet;
-        outputR[sample] = dryR * dry + wetR * wet;
+        outputL[sample] = dryL * (1.0f - mix) + wetL * mix;
+        outputR[sample] = dryR * (1.0f - mix) + wetR * mix;
     }
  
     #if JUCE_DEBUG

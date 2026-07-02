@@ -21,11 +21,8 @@ public:
 
     static ParameterIDs paramIDs;
 
-    float dry = 1.0f;
-    AudioParameterFloat* dryParam;
-
-    float wet = 0.5f;
-    AudioParameterFloat* wetParam;
+    float mix = 0.5f;
+    AudioParameterFloat* mixParam;
 
     String delayL = "1/4";
     AudioParameterChoice* delayLParam;
@@ -53,8 +50,7 @@ public:
 private:
     AudioProcessorValueTreeState& tree;
 
-    LinearSmoothedValue<float> drySmoother;
-    LinearSmoothedValue<float> wetSmoother;
+    LinearSmoothedValue<float> mixSmoother;
     LinearSmoothedValue<float> feedbackSmoother;
     LinearSmoothedValue<float> widthSmoother;
     LinearSmoothedValue<float> lowcutSmoother;

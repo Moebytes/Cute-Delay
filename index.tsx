@@ -54,14 +54,14 @@ const App: React.FunctionComponent = () => {
                 <LightIcon className="theme-icon" onClick={toggleTheme}/>}
             </div>
             <div className="knobs-container">
-                <div className="column-container">
-                    <SkewKnob
-                        label={parameters.lowcut.id.toUpperCase()}
-                        parameterID={parameters.lowcut.id}
+                <div className="column-container" style={{padding: "1.3rem 0.4rem"}}>
+                    <Knob
+                        label={parameters.mix.id.toUpperCase()}
+                        parameterID={parameters.mix.id}
                         color="#FF4EA7"/>
-                    <SkewKnob
-                        label={parameters.highcut.id.toUpperCase()}
-                        parameterID={parameters.highcut.id}
+                    <MiniComboKnob
+                        label={parameters.shift.id.toUpperCase()}
+                        parameterID={parameters.shift.id}
                         color="#FF4EA7"/>
                 </div>
                 <div className="big-column-container">
@@ -76,10 +76,6 @@ const App: React.FunctionComponent = () => {
                             color="#FF4EA7"/>
                     </div>
                     <div className="row-container">
-                        <MiniComboKnob
-                            label={parameters.shift.id.toUpperCase()}
-                            parameterID={parameters.shift.id}
-                            color="#FF4EA7"/>
                         <Checkbox
                             label={"PING PONG?"}
                             parameterID={parameters.pingPong.id}/>
@@ -96,13 +92,13 @@ const App: React.FunctionComponent = () => {
                         color="#FF4EA7"/>
                 </div>
                 <div className="column-container">
-                    <Knob
-                        label={parameters.dry.id.toUpperCase()}
-                        parameterID={parameters.dry.id}
+                    <SkewKnob
+                        label={parameters.lowcut.id.toUpperCase()}
+                        parameterID={parameters.lowcut.id}
                         color="#FF4EA7"/>
-                    <Knob
-                        label={parameters.wet.id.toUpperCase()}
-                        parameterID={parameters.wet.id}
+                    <SkewKnob
+                        label={parameters.highcut.id.toUpperCase()}
+                        parameterID={parameters.highcut.id}
                         color="#FF4EA7"/>
                 </div>
             </div>

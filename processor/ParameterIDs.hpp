@@ -4,8 +4,7 @@
 
 class ParameterIDs {
 public:
-    ParameterID dry;
-    ParameterID wet;
+    ParameterID mix;
     ParameterID delayL;
     ParameterID delayR;
     ParameterID shift;
@@ -41,8 +40,7 @@ public:
             return ParameterID{id, version};
         };
 
-        parameterIDs.dry = getParameter("dry");
-        parameterIDs.wet = getParameter("wet");
+        parameterIDs.mix = getParameter("mix");
         parameterIDs.delayL = getParameter("delayL");
         parameterIDs.delayR = getParameter("delayR");
         parameterIDs.shift = getParameter("shift");

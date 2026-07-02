@@ -6,8 +6,7 @@
   "modified": "2026-07-01T20:26:37.711-04:00",
   "presetFormat": 1,
   "parameters": {
-    "dry": "82%",
-    "wet": "86%",
+    "mix": "66%",
     "delayL": "1/3",
     "delayR": "1/6",
     "shift": "0",

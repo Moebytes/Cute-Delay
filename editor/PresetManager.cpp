@@ -453,7 +453,6 @@ auto PresetManager::loadPreset(const String& jsonStr) -> String {
 
     for (const auto& property : paramObj->getProperties()) {
         auto id = property.name.toString();
-        if (id == "mix") continue;
         auto* param = this->tree.getParameter(id);
 
         float value = param->getValueForText(property.value.toString());
