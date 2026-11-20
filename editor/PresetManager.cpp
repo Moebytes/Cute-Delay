@@ -451,6 +451,11 @@ auto PresetManager::loadPreset(const String& jsonStr) -> String {
     auto* paramObj = parameters.getDynamicObject();
     if (paramObj == nullptr) return "";
 
+    if (!paramObj->hasProperty("reverse")) {
+        auto* param = this->tree.getParameter("reverse");
+        param->setValueNotifyingHost(param->getDefaultValue());
+    }
+
     for (const auto& property : paramObj->getProperties()) {
         auto id = property.name.toString();
         auto* param = this->tree.getParameter(id);

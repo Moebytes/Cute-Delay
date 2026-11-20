@@ -13,6 +13,7 @@ public:
     ParameterID pingPong;
     ParameterID lowcut;
     ParameterID highcut;
+    ParameterID reverse;
 
     static inline var parsedJSON;
 
@@ -49,6 +50,7 @@ public:
         parameterIDs.pingPong = getParameter("pingPong");
         parameterIDs.lowcut = getParameter("lowcut");
         parameterIDs.highcut = getParameter("highcut");
+        parameterIDs.reverse = getParameter("reverse");
 
         return parameterIDs;
     }

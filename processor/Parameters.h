@@ -42,6 +42,9 @@ public:
     bool pingPong = false;
     AudioParameterBool* pingPongParam;
 
+    bool reverse = false;
+    AudioParameterBool* reverseParam;
+
     float lowcut = 200.0f;
     AudioParameterFloat* lowcutParam;
 

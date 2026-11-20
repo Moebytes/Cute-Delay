@@ -45,7 +45,8 @@ Parameters::Parameters(AudioProcessorValueTreeState& tree) : tree(tree) {
     };
 
     auto boolParameters = std::vector<BoolPair>{
-        {pingPongParam, &paramIDs.pingPong}
+        {pingPongParam, &paramIDs.pingPong},
+        {reverseParam, &paramIDs.reverse}
     };
 
     auto choiceParameters = std::vector<ChoicePair>{
@@ -116,6 +117,10 @@ auto Parameters::createParameterLayout() -> AudioProcessorValueTreeState::Parame
         .withValueFromStringFunction(Functions::parseHz)
     ));
 
+    layout.add(std::make_unique<AudioParameterBool>(
+        paramIDs.reverse, "Reverse", false
+    ));
+
     return layout;
 }
 
@@ -162,7 +167,8 @@ auto Parameters::reset() noexcept -> void {
     };
 
     auto paramBools = std::vector{
-        std::pair{pingPongParam, &pingPong}
+        std::pair{pingPongParam, &pingPong},
+        std::pair{reverseParam, &reverse}
     };
 
     for (auto& [param, value] : paramFloats) {
@@ -222,6 +228,7 @@ auto Parameters::blockUpdate() noexcept -> void {
     this->delayR = this->delayRParam->getCurrentChoiceName();
     this->shift = this->shiftParam->getCurrentChoiceName();
     this->pingPong = this->pingPongParam->get();
+    this->reverse = this->reverseParam->get();
 }
 
 auto Parameters::update() noexcept -> void {

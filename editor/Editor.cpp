@@ -48,6 +48,7 @@ auto Editor::webviewOptions() -> WebBrowserComponent::Options {
     .withOptionsFrom(feedbackRelay)
     .withOptionsFrom(widthRelay)
     .withOptionsFrom(pingPongRelay)
+    .withOptionsFrom(reverseRelay)
     .withOptionsFrom(lowcutRelay)
     .withOptionsFrom(highcutRelay)
     .withNativeFunction("getDefaultParameter", [this](auto args, auto completion){ 

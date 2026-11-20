@@ -80,6 +80,11 @@ const App: React.FunctionComponent = () => {
                             label={"PING PONG?"}
                             parameterID={parameters.pingPong.id}/>
                     </div>
+                    <div className="row-container">
+                        <Checkbox
+                            label={"REVERSE?"}
+                            parameterID={parameters.reverse.id}/>
+                    </div>
                 </div>
                 <div className="column-container">
                     <Knob

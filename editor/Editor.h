@@ -42,6 +42,9 @@ private:
 
     WebToggleButtonRelay pingPongRelay {Parameters::paramIDs.pingPong.getParamID()};
     WebToggleButtonParameterAttachment pingPongAttachment {*this->processor.parameters.pingPongParam, pingPongRelay, nullptr};
+
+    WebToggleButtonRelay reverseRelay {Parameters::paramIDs.reverse.getParamID()};
+    WebToggleButtonParameterAttachment reverseAttachment {*this->processor.parameters.reverseParam, reverseRelay, nullptr};
     
     WebSliderRelay lowcutRelay {Parameters::paramIDs.lowcut.getParamID()};
     WebSliderParameterAttachment lowcutAttachment {*this->processor.parameters.lowcutParam, lowcutRelay, nullptr};

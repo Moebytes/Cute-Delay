@@ -6,6 +6,7 @@
     "feedback": {"id": "feedback", "version": 1},
     "width": {"id": "width", "version": 1},
     "pingPong": {"id": "pingPong", "version": 1},
+    "reverse": {"id": "reverse", "version": 1},
     "lowcut": {"id": "lowcut", "version": 1},
     "highcut": {"id": "highcut", "version": 1}
 }

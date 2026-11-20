@@ -111,6 +111,7 @@ auto Processor::processBlock(AudioBuffer<float>& buffer, [[maybe_unused]] MidiBu
     this->delay.setFeedback(this->parameters.feedback);
     this->delay.setStereoWidth(this->parameters.width);
     this->delay.setPingPong(this->parameters.pingPong);
+    this->delay.setReverse(this->parameters.reverse);
 
     for (int sample = 0; sample < buffer.getNumSamples(); sample++) {
         this->parameters.update();
@@ -128,8 +129,10 @@ auto Processor::processBlock(AudioBuffer<float>& buffer, [[maybe_unused]] MidiBu
 
         this->delay.process(dryL, dryR, wetL, wetR);
 
-        outputL[sample] = dryL * (1.0f - mix) + wetL * mix;
-        outputR[sample] = dryR * (1.0f - mix) + wetR * mix;
+        const float dryGain = std::sqrt(1.0f - mix);
+        const float wetGain = std::sqrt(mix);
+        outputL[sample] = dryL * dryGain + wetL * wetGain;
+        outputR[sample] = dryR * dryGain + wetR * wetGain;
     }
  
     #if JUCE_DEBUG

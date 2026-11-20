@@ -10,7 +10,7 @@ public:
     auto prepareToPlay(double sampleRate, double maxDelaySeconds = 8.0) -> void {
         this->sampleRate = sampleRate;
 
-        this->bufferSize = static_cast<int>(std::ceil(maxDelaySeconds * sampleRate));
+        this->bufferSize = 2 * static_cast<int>(std::ceil(maxDelaySeconds * sampleRate));
         this->delayBufferL.setSize(1, this->bufferSize);
         this->delayBufferR.setSize(1, this->bufferSize);
 
@@ -31,6 +31,8 @@ public:
 
     auto reset() -> void {
         this->writePos = 0;
+        this->reversePosL = 0;
+        this->reversePosR = 0;
         this->delayBufferL.clear();
         this->delayBufferR.clear();
 
@@ -72,6 +74,14 @@ public:
         this->pingPong = pingPong;
     }
 
+    auto setReverse(bool reverse) -> void {
+        if (this->reverse != reverse) {
+            this->reversePosL = 0;
+            this->reversePosR = 0;
+        }
+        this->reverse = reverse;
+    }
+
     auto setHighcutFreq(float highcutFreq) -> void {
         this->highcutFreq = highcutFreq;
         updateFilters();
@@ -100,13 +110,14 @@ public:
     auto updateDelaySamples() -> void {
         const double secondsPerBeat = 60.0 / jmax(1.0, bpm);
 
-        this->delaySamplesL = jlimit(1, this->bufferSize - 1, 
+        this->delaySamplesL = jlimit(1, this->bufferSize / 2 - 1,
             static_cast<int>(secondsPerBeat * getBeats(this->delayTimeL) * this->sampleRate));
 
-        this->delaySamplesR = jlimit(1, this->bufferSize - 1,
+        this->delaySamplesR = jlimit(1, this->bufferSize / 2 - 1,
             static_cast<int>(secondsPerBeat * getBeats(this->delayTimeR) * this->sampleRate));
 
-        this->shiftSamples = static_cast<int>((60.0 / this->bpm) * getBeats(this->shiftTime) * this->sampleRate);
+        this->shiftSamples = jlimit(0, this->bufferSize / 2 - 1,
+            static_cast<int>(secondsPerBeat * getBeats(this->shiftTime) * this->sampleRate));
 
         this->alternatePingSamples = this->shiftSamples + std::max(this->delaySamplesL, this->delaySamplesR);
     }
@@ -125,21 +136,41 @@ public:
         this->lowpassFilterR.setResonance(q);
     }
 
+    auto readDelay(const float* buffer, int length, int reverseLength, int& reversePos) -> float {
+        if (!this->reverse) {
+            return buffer[(this->writePos - length + this->bufferSize) % this->bufferSize];
+        }
+
+        if (reversePos >= reverseLength) reversePos = 0;
+        int offset = length - reverseLength;
+        int phase = (reversePos + reverseLength - offset % reverseLength) % reverseLength;
+
+        int readPos = (this->writePos - 1 - 2 * phase - offset + this->bufferSize) % this->bufferSize;
+        int fadeSamples = jmax(1, jmin(reverseLength / 2, static_cast<int>(0.005 * this->sampleRate)));
+        float gain = jmin(1.0f, static_cast<float>(jmin(phase, reverseLength - 1 - phase)) / static_cast<float>(fadeSamples));
+
+        reversePos++;
+        return buffer[readPos] * gain;
+    }
+
     auto process(float dryL, float dryR, float& wetL, float& wetR) -> void {
         auto* left = delayBufferL.getWritePointer(0);
         auto* right = delayBufferR.getWritePointer(0);
 
-        int readPosL = this->writePos - this->delaySamplesL - this->shiftSamples + this->bufferSize;
-        int readPosR = this->writePos - this->delaySamplesR - this->shiftSamples + this->bufferSize;
+        int stereoOffset = !this->pingPong && this->delaySamplesL == this->delaySamplesR
+            ? static_cast<int>(0.01 * this->sampleRate) : 0;
 
-        readPosL %= this->bufferSize;
-        readPosR %= this->bufferSize;
+        int lengthL = jlimit(1, this->bufferSize / 2 - 1, this->delaySamplesL + this->shiftSamples);
+        int lengthR = jlimit(1, this->bufferSize / 2 - 1, this->delaySamplesR + this->shiftSamples + stereoOffset);
 
-        wetL = left[readPosL];
-        wetR = right[readPosR];
+        wetL = this->readDelay(left, lengthL, this->delaySamplesL, this->reversePosL);
+        wetR = this->readDelay(right, lengthR, this->delaySamplesR, this->reversePosR);
 
-        const float delayedL = wetL;
-        const float delayedR = wetR;
+        const float delayedL = this->reverse
+            ? left[(this->writePos - this->delaySamplesL + this->bufferSize) % this->bufferSize] : wetL;
+
+        const float delayedR = this->reverse
+            ? right[(this->writePos - this->delaySamplesR + this->bufferSize) % this->bufferSize] : wetR;
 
         const float mid  = 0.5f * (wetL + wetR);
         const float side = 0.5f * (wetL - wetR) * stereoWidth;
@@ -196,6 +227,7 @@ private:
     float feedback = 0.5f;
     float stereoWidth = 1.0f;
     bool pingPong = false;
+    bool reverse = false;
     float lowcutFreq = 200.0f;
     float highcutFreq = 20000.0f;
 
@@ -203,6 +235,8 @@ private:
     AudioBuffer<float> delayBufferR;
     int bufferSize = 0;
     int writePos = 0;
+    int reversePosL = 0;
+    int reversePosR = 0;
 
     int delaySamplesL = 1;
     int delaySamplesR = 1;
@@ -215,5 +249,4 @@ private:
 
     BiquadFilter highpassFilterL;
     BiquadFilter highpassFilterR;
-
 };
